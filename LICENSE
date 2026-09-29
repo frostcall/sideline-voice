@@ -1,0 +1,22 @@
+Copyright (c) 2026 Thomas Howard. All rights reserved.
+
+This repository and its release assets contain recordings of Thomas Howard's voice and a speech
+synthesis model trained on those recordings (together, "the Voice Files").
+
+Permission is granted to download the Voice Files and to use them only through the Sideline
+Soundboard and Game Day DJ apps published by Thomas Howard. No other right is granted. Without
+prior written permission from Thomas Howard you may not copy, redistribute, modify, re-host,
+sell, sublicense, use in any other product or service, or use to train or fine-tune any model,
+any of the Voice Files, whether for commercial or non-commercial purposes.
+
+Nothing in this licence grants any right to use Thomas Howard's name, likeness or voice, and all
+such rights are reserved.
+
+THE VOICE FILES ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE VOICE
+FILES OR THEIR USE.
+
+Third-party material: the synthesis model is a derivative of the Coqui TTS "tts_models/en/
+ljspeech/vits" model, licensed under the Apache License, Version 2.0, which was trained on the
+public-domain LJ Speech dataset. The Apache License text and notice for that component are
+included in each voice pack (THIRD_PARTY_NOTICES.txt) and apply to that component only.
