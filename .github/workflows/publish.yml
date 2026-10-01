@@ -1,0 +1,77 @@
+# Publishes a voice pack as a GitHub Release, then deletes the branch it came from.
+#
+# Push a branch named publish/<anything> whose tree has:
+#   publish.json   {"tag": "calls-v1", "title": "Calls v1", "notes": "...", "files": {"name": "sha256", ...}}
+#   assets/<name>  each file listed in "files"
+# The workflow checks every SHA-256, creates the release on main (or updates it if the tag
+# already exists: notes are replaced, files are re-uploaded), marks it not-latest, downloads
+# each asset back to check it again, and deletes the publish branch so the files don't stay in
+# the repo. Nothing on main ever contains audio or model files.
+name: Publish pack
+
+on:
+  push:
+    branches: ["publish/**"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check files
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, sys
+          p = json.load(open("publish.json"))
+          bad = []
+          for name, want in p["files"].items():
+              path = os.path.join("assets", name)
+              got = hashlib.sha256(open(path, "rb").read()).hexdigest()
+              print(f"{name}: {got} {'ok' if got == want else 'MISMATCH (want ' + want + ')'}")
+              if got != want:
+                  bad.append(name)
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Create or update the release
+        run: |
+          set -euo pipefail
+          TAG=$(jq -r .tag publish.json)
+          TITLE=$(jq -r .title publish.json)
+          jq -r .notes publish.json > notes.md
+          FILES=$(jq -r '.files | keys[]' publish.json | sed 's#^#assets/#' | tr '\n' ' ')
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --title "$TITLE" --notes-file notes.md --latest=false
+            gh release upload "$TAG" $FILES --clobber
+          else
+            gh release create "$TAG" $FILES --target main --title "$TITLE" --notes-file notes.md --latest=false
+          fi
+
+      - name: Download and check again
+        run: |
+          set -euo pipefail
+          TAG=$(jq -r .tag publish.json)
+          mkdir -p /tmp/check && cd /tmp/check
+          for name in $(jq -r '.files | keys[]' "$GITHUB_WORKSPACE/publish.json"); do
+            want=$(jq -r --arg n "$name" '.files[$n]' "$GITHUB_WORKSPACE/publish.json")
+            curl -fsSL -o "$name" "https://github.com/$GH_REPO/releases/download/$TAG/$name"
+            got=$(sha256sum "$name" | cut -d' ' -f1)
+            echo "$name $got"
+            [ "$got" = "$want" ]
+          done
+
+      - name: Delete the publish branch
+        if: success()
+        run: git push origin --delete "${GITHUB_REF_NAME}"
