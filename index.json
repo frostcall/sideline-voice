@@ -1,0 +1,19 @@
+{
+ "schema": 1,
+ "note": "Current voice packs. The app reads this file, then downloads the manifest and zip it points to and checks their SHA-256.",
+ "calls": {
+  "tag": "calls-v1",
+  "version": 1,
+  "manifest": {
+   "url": "https://github.com/frostcall/sideline-voice/releases/download/calls-v1/voice-calls.json",
+   "bytes": 111986,
+   "sha256": "c4aa9bf2c7b2381a20cbc8b0ce49fc582c0a8d569d4d5576c22355036125a224"
+  },
+  "zip": {
+   "url": "https://github.com/frostcall/sideline-voice/releases/download/calls-v1/voice-calls-v1.zip",
+   "bytes": 9513589,
+   "sha256": "4a3e0460e40016ecadca74b71626040a76b46c6b3f1bd5cf296c9d3444b98da9"
+  }
+ },
+ "voice": null
+}
