@@ -15,5 +15,18 @@
    "sha256": "4a3e0460e40016ecadca74b71626040a76b46c6b3f1bd5cf296c9d3444b98da9"
   }
  },
- "voice": null
+ "voice": {
+  "tag": "voice-v1",
+  "version": 1,
+  "manifest": {
+   "url": "https://github.com/frostcall/sideline-voice/releases/download/voice-v1/voice-pack.json",
+   "bytes": 2737,
+   "sha256": "0545a49c398cbcb9b5d4b5f0f22942cc3a13c65b2420379bbbdcca4d0c0520e5"
+  },
+  "zip": {
+   "url": "https://github.com/frostcall/sideline-voice/releases/download/voice-v1/voice-pack-v1.zip",
+   "bytes": 57755266,
+   "sha256": "5c59284071693429e9a3ff6c5afbb9411dd3e63d2e3b804d82675a59e449591c"
+  }
+ }
 }
